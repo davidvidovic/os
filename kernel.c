@@ -1,21 +1,10 @@
 #include "kernel.h"
-
-typedef unsigned char uint8_t;
-typedef unsigned char uint32_t;
-typedef uint32_t size_t;
+#include "common.h"
 
 /* Symbols are defined in kernel.ld script and here we only obtain their addresses */
 /* If used only __bss, we'd get only the value at 0th byte, so [] symboles act as a pointer */
 /* Since symbol is aligned to 4 bytes, it will be parsed as a memory location? */
 extern char __bss[], __bss_end[], __stack_top[];
-
-void *memset(void *buf, char c, size_t n) 
-{
-	uint8_t *p = (uint8_t *)buf;
-	while(--n)
-		*p++ = c;
-	return buf;
-}
 
 struct sbiret sbi_call(
 		long arg0, 
@@ -59,9 +48,17 @@ void kernel_main(void)
 	// Init __bss section with zeros
 	memset(__bss, 0, (size_t)__bss_end - (size_t)__bss);
 
-	const char *s = "\n\nHello World!\n";
+	const char *s = "\n\nHello World!";
 	for(int i = 0; s[i] != '\0'; i++)
 		putchar(s[i]);
+	
+	printf("\n%s using printf", s);
+
+	const char *s1 = "David";
+	char *s2;
+	s2 = strcpy(s2, s1);
+	printf("\n\n%s %s\n", s1, s2);
+	printf("\n\n%d %d", strcmp(s1, s2), strcmp(s1, s));
 
 	for(;;)
 		__asm__ __volatile__("wfi");
