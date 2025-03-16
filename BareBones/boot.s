@@ -54,9 +54,9 @@ then skip 16384 bytes, thus allocating 16KiB of stack space and crate stack_top 
 /* Define the entry point to the kernel */
 
 .section .text
-.global __start /* means the start symbol can be accessed from other files, also by marking it global linker know its the entry point */
-.type __start, @function /* just marks the global symbol __start as a function */
-__start: /* start of the program */
+.global _start /* means the start symbol can be accessed from other files, also by marking it global linker know its the entry point */
+.type _start, @function /* just marks the global symbol _start as a function */
+_start: /* start of the program */
 
     /*
 	The bootloader has loaded us into 32-bit protected mode on a x86
@@ -110,4 +110,4 @@ __start: /* start of the program */
 Set the size of the _start symbol to the current location '.' minus its start.
 This is useful when debugging or when you implement call tracing.
 */
-.size __start, . - __start
+.size _start, . - _start
